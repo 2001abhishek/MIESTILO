@@ -53,8 +53,9 @@ const Navbar = () => {
     { name: 'Workshop', href: '/pages/workshop' },
     { name: 'Why Us', href: '/pages/why-us' },
     { name: 'Our Customers', href: '/pages/our-customers' },
-    { name: 'CSR', href: '/pages/csr' },
+    // { name: 'CSR', href: '/pages/csr' },
     { name: 'Blog', href: '/pages/blog' },
+    { name: 'Products', href: '/pages/products' },
   ];
 
   // Close dropdown when clicking outside
