@@ -3,10 +3,11 @@ import blogsData from '@/app/data/blogs.json';
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const blogId = parseInt(params.id);
+    const { id } = await params;
+    const blogId = parseInt(id);
     const blog = blogsData.find((b) => b.id === blogId);
 
     if (!blog) {

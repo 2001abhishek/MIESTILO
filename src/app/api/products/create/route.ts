@@ -24,7 +24,7 @@ export async function POST(request: Request) {
     const products = JSON.parse(fileContents);
     
     // Generate new ID
-    const newId = products.length > 0 ? Math.max(...products.map((p: any) => p.id)) + 1 : 1;
+    const newId = products.length > 0 ? Math.max(...products.map((p: { id: number }) => p.id)) + 1 : 1;
     
     // Create new product
     const newProduct = {

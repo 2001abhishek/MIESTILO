@@ -24,7 +24,7 @@ export async function POST(request: Request) {
     const blogs = JSON.parse(fileContents);
     
     // Generate new ID
-    const newId = blogs.length > 0 ? Math.max(...blogs.map((b: any) => b.id)) + 1 : 1;
+    const newId = blogs.length > 0 ? Math.max(...blogs.map((b: { id: number }) => b.id)) + 1 : 1;
     
     // Create new blog post
     const newBlog = {
