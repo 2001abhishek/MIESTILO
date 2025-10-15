@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
@@ -19,6 +19,30 @@ const CreateBlogPage = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isChecking, setIsChecking] = useState(true);
+
+  // Check authentication on mount
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const response = await fetch('/api/auth/check');
+        const data = await response.json();
+        
+        if (!data.isAuthenticated) {
+          router.push('/pages/auth/login');
+        } else {
+          setIsAuthenticated(true);
+        }
+      } catch (error) {
+        router.push('/pages/auth/login');
+      } finally {
+        setIsChecking(false);
+      }
+    };
+    
+    checkAuth();
+  }, [router]);
 
   // Initialize Tiptap editor
   const editor = useEditor({
@@ -53,27 +77,65 @@ const CreateBlogPage = () => {
       reader.readAsDataURL(file);
     }
   };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
     const content = editor?.getHTML() || '';
-    const blogData = { 
-      ...formData, 
+    
+    // Create excerpt from content (first 150 characters of text)
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = content;
+    const textContent = tempDiv.textContent || tempDiv.innerText || '';
+    const excerpt = textContent.substring(0, 150) + '...';
+    
+    const blogData = {
+      ...formData,
       content,
-      imageName: imageFile?.name || ''
+      excerpt,
+      image: imagePreview || 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80',
     };
 
-    // Simulate API call - In production, you would upload imageFile to server/storage
-    setTimeout(() => {
-      console.log('Blog Post Data:', blogData);
-      console.log('Image File:', imageFile);
-      alert('Blog post created successfully! (This is a demo - data is not saved)');
+    try {
+      const response = await fetch('/api/blogs/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(blogData),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        alert('Blog created successfully!');
+        router.push('/pages/blog');
+      } else {
+        alert('Failed to create blog: ' + data.message);
+        setIsSubmitting(false);
+      }
+    } catch (error) {
+      console.error('Error creating blog:', error);
+      alert('An error occurred while creating the blog');
       setIsSubmitting(false);
-      router.push('/pages/blog');
-    }, 1000);
+    }
   };
+
+  // Show loading while checking authentication
+  if (isChecking) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-xl text-gray-600">Checking authentication...</div>
+        </div>
+      </div>
+    );
+  }
+
+  // Don't render form if not authenticated (will redirect)
+  if (!isAuthenticated) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 py-12">

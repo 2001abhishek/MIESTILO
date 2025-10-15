@@ -1,66 +1,50 @@
-import React from 'react';
+'use client';
+
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
-// Static blog data
-const blogPosts = [
-  {
-    id: 1,
-    title: 'Summary and Analysis of Miestilo',
-    excerpt: 'They describe themselves as a manufacturer of intimate wear (bras, panties, lingerie sets) and linen products (bedsheets, towels, duvet covers, bed runners) for hospitality, healthcare, and retail...',
-    image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80',
-    date: 'October 15, 2025',
-    category: 'Company Overview',
-    readTime: '5 min read'
-  },
-  {
-    id: 2,
-    title: 'Quality Standards in Hospitality Linen',
-    excerpt: 'Discover how Miestilo maintains exceptional quality standards across all hospitality linen products, ensuring customer satisfaction and durability...',
-    image: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&q=80',
-    date: 'October 10, 2025',
-    category: 'Quality',
-    readTime: '4 min read'
-  },
-  {
-    id: 3,
-    title: 'Customization Options for Retail Partners',
-    excerpt: 'Explore the wide range of customization options available for retail partners, from design to packaging, with flexible MOQs...',
-    image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&q=80',
-    date: 'October 5, 2025',
-    category: 'Customization',
-    readTime: '6 min read'
-  },
-  {
-    id: 4,
-    title: 'Sustainable Practices in Manufacturing',
-    excerpt: 'Learn about our commitment to sustainable and eco-friendly manufacturing practices that reduce environmental impact...',
-    image: 'https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=800&q=80',
-    date: 'September 28, 2025',
-    category: 'Sustainability',
-    readTime: '5 min read'
-  },
-  {
-    id: 5,
-    title: 'Healthcare Linen Solutions',
-    excerpt: 'Specialized linen solutions designed for healthcare facilities, meeting strict hygiene and durability requirements...',
-    image: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=800&q=80',
-    date: 'September 20, 2025',
-    category: 'Healthcare',
-    readTime: '4 min read'
-  },
-  {
-    id: 6,
-    title: 'The Future of Intimate Wear',
-    excerpt: 'Trends and innovations in intimate wear manufacturing, focusing on comfort, style, and quality materials...',
-    image: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&q=80',
-    date: 'September 15, 2025',
-    category: 'Innovation',
-    readTime: '5 min read'
-  }
-];
+interface BlogPost {
+  id: number;
+  title: string;
+  excerpt: string;
+  image: string;
+  date: string;
+  category: string;
+  readTime: string;
+}
 
 const BlogGrid = () => {
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const response = await fetch('/api/blogs');
+        const data = await response.json();
+        if (data.success) {
+          setBlogPosts(data.blogs);
+        }
+      } catch (error) {
+        console.error('Failed to fetch blogs:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBlogs();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="py-16 md:py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center text-gray-600">Loading blogs...</div>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="py-16 md:py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
