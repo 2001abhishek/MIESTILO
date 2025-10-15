@@ -12,7 +12,37 @@ const Navbar = () => {
   const [isCompanyDropdownOpen, setIsCompanyDropdownOpen] = useState(false);
   const [isMobileCompanyDropdownOpen, setIsMobileCompanyDropdownOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Handle scroll behavior
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      // Check if scrolled past 100px
+      if (currentScrollY > 100) {
+        setIsScrolled(true);
+        
+        // Hide on scroll down, show on scroll up
+        if (currentScrollY > lastScrollY) {
+          setIsVisible(false);
+        } else {
+          setIsVisible(true);
+        }
+      } else {
+        setIsScrolled(false);
+        setIsVisible(true);
+      }
+      
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [lastScrollY]);
 
   // Check authentication status
   useEffect(() => {
@@ -74,16 +104,24 @@ const Navbar = () => {
 
   return (
     <>
-      <div className="w-full bg-white py-2 sm:py-4">
+      <div className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 py-2 sm:py-4 ${
+        isScrolled 
+          ? 'bg-white/95 backdrop-blur-lg border-b border-gray-200 shadow-lg' 
+          : 'bg-transparent border-b border-white/10'
+      } ${
+        isVisible ? 'translate-y-0' : '-translate-y-full'
+      }`}>
         <div className="px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2 sm:gap-8">
             {/* Brand Logo - Outside Left */}
             <div className="flex items-center flex-shrink-0">
               <div className="text-lg sm:text-2xl font-bold tracking-wide">
                 <span className="text-orange-500">MIES</span>
-                <span className="text-gray-900">TILO</span>
+                <span className={isScrolled ? 'text-gray-900' : 'text-white'}>TILO</span>
               </div>
-              <div className="ml-1 sm:ml-2 text-xs text-gray-500 leading-tight hidden sm:block">
+              <div className={`ml-1 sm:ml-2 text-xs leading-tight hidden sm:block ${
+                isScrolled ? 'text-gray-500' : 'text-white/80'
+              }`}>
                 <div>Miestilo Lifestyle</div>
                 <div>Private Limited</div>
               </div>
@@ -91,20 +129,24 @@ const Navbar = () => {
 
             {/* Desktop Navigation Container with Border */}
             <div className="flex-1 hidden lg:block">
-              <nav className="border border-gray-200 bg-white shadow-sm">
+              <nav className="border border-white/20 bg-white/10 backdrop-blur-sm shadow-sm rounded-full">
                 <div className="flex justify-between items-center px-6 py-3">
                   {/* Navigation Links - Centered */}
                   <div className="flex-1 flex justify-center">
                     <div className="flex space-x-6">
-                     {navItems.map((item) => (
+                      {navItems.map((item) => (
                         <Link
                           key={item.name}
                           href={item.href}
                           className={cn(
                             'px-4 py-2 text-sm font-medium transition-colors duration-200 rounded-full',
                             pathname === item.href
-                              ? 'bg-gray-100 text-gray-900'
-                              : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                              ? isScrolled 
+                                ? 'bg-gray-100 text-gray-900'
+                                : 'bg-white/20 text-white'
+                              : isScrolled
+                                ? 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                                : 'text-gray-100 hover:text-white hover:bg-white/10'
                           )}
                         >
                           {item.name}
