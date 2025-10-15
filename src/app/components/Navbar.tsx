@@ -41,15 +41,7 @@ const Navbar = () => {
 
   const navItems = [
     { name: 'Home', href: '/pages/home' },
-    { 
-      name: 'Company', 
-      href: '/pages/company',
-      hasDropdown: true,
-      dropdownItems: [
-        { name: 'About Us', href: '/pages/company/about-us' },
-        { name: 'Dealership', href: '/pages/company/dealership' },
-      ]
-    },
+   {name: 'About Us', href: '/pages/company/about-us'},
     { name: 'Workshop', href: '/pages/workshop' },
     { name: 'Why Us', href: '/pages/why-us' },
     { name: 'Our Customers', href: '/pages/our-customers' },
@@ -104,68 +96,19 @@ const Navbar = () => {
                   {/* Navigation Links - Centered */}
                   <div className="flex-1 flex justify-center">
                     <div className="flex space-x-6">
-                      {navItems.map((item) => (
-                        <div key={item.name} className="relative" ref={item.hasDropdown ? dropdownRef : null}>
-                          {item.hasDropdown ? (
-                            <div>
-                              <button
-                                onClick={() => setIsCompanyDropdownOpen(!isCompanyDropdownOpen)}
-                                className={cn(
-                                  'px-4 py-2 text-sm font-medium transition-colors duration-200 rounded-full flex items-center',
-                                  pathname.startsWith('/pages/company')
-                                    ? 'bg-gray-100 text-gray-900'
-                                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                                )}
-                              >
-                                {item.name}
-                                <svg 
-                                  className={cn(
-                                    'ml-1 w-4 h-4 transition-transform duration-200',
-                                    isCompanyDropdownOpen ? 'rotate-180' : ''
-                                  )}
-                                  fill="none" 
-                                  stroke="currentColor" 
-                                  viewBox="0 0 24 24"
-                                >
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                </svg>
-                              </button>
-                              
-                              {/* Dropdown Menu */}
-                              {isCompanyDropdownOpen && (
-                                <div className="absolute top-full left-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
-                                  <div className="py-2">
-                                    {item.dropdownItems?.map((dropdownItem) => (
-                                      <Link
-                                        key={dropdownItem.name}
-                                        href={dropdownItem.href}
-                                        onClick={() => setIsCompanyDropdownOpen(false)}
-                                        className={cn(
-                                          'block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors duration-200',
-                                          pathname === dropdownItem.href ? 'bg-gray-50 text-gray-900' : ''
-                                        )}
-                                      >
-                                        {dropdownItem.name}
-                                      </Link>
-                                    ))}
-                                  </div>
-                                </div>
-                              )}
-                            </div>
-                          ) : (
-                            <Link
-                              href={item.href}
-                              className={cn(
-                                'px-4 py-2 text-sm font-medium transition-colors duration-200 rounded-full',
-                                pathname === item.href
-                                  ? 'bg-gray-100 text-gray-900'
-                                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                              )}
-                            >
-                              {item.name}
-                            </Link>
+                     {navItems.map((item) => (
+                        <Link
+                          key={item.name}
+                          href={item.href}
+                          className={cn(
+                            'px-4 py-2 text-sm font-medium transition-colors duration-200 rounded-full',
+                            pathname === item.href
+                              ? 'bg-gray-100 text-gray-900'
+                              : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                           )}
-                        </div>
+                        >
+                          {item.name}
+                        </Link>
                       ))}
                       
                       {/* Login/Logout Button */}
@@ -276,69 +219,20 @@ const Navbar = () => {
             
             <nav className="mt-4">
               <div className="px-4 space-y-2">
-                {navItems.map((item) => (
-                  <div key={item.name}>
-                    {item.hasDropdown ? (
-                      <div>
-                        <button
-                          onClick={() => setIsMobileCompanyDropdownOpen(!isMobileCompanyDropdownOpen)}
-                          className={cn(
-                            'w-full flex items-center justify-between px-4 py-3 text-base font-medium rounded-lg transition-colors duration-200',
-                            pathname.startsWith('/pages/company')
-                              ? 'bg-gray-100 text-gray-900'
-                              : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                          )}
-                        >
-                          {item.name}
-                          <svg 
-                            className={cn(
-                              'w-5 h-5 transition-transform duration-200',
-                              isMobileCompanyDropdownOpen ? 'rotate-180' : ''
-                            )}
-                            fill="none" 
-                            stroke="currentColor" 
-                            viewBox="0 0 24 24"
-                          >
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                          </svg>
-                        </button>
-                        
-                        {/* Mobile Dropdown Items */}
-                        {isMobileCompanyDropdownOpen && (
-                          <div className="ml-4 mt-2 space-y-1">
-                            {item.dropdownItems?.map((dropdownItem) => (
-                              <Link
-                                key={dropdownItem.name}
-                                href={dropdownItem.href}
-                                onClick={closeMobileMenu}
-                                className={cn(
-                                  'block px-4 py-2 text-sm rounded-lg transition-colors duration-200',
-                                  pathname === dropdownItem.href
-                                    ? 'bg-gray-100 text-gray-900'
-                                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                                )}
-                              >
-                                {dropdownItem.name}
-                              </Link>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    ) : (
-                      <Link
-                        href={item.href}
-                        onClick={closeMobileMenu}
-                        className={cn(
-                          'block px-4 py-3 text-base font-medium rounded-lg transition-colors duration-200',
-                          pathname === item.href
-                            ? 'bg-gray-100 text-gray-900'
-                            : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                        )}
-                      >
-                        {item.name}
-                      </Link>
+               {navItems.map((item) => (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    onClick={closeMobileMenu}
+                    className={cn(
+                      'block px-4 py-3 text-base font-medium rounded-lg transition-colors duration-200',
+                      pathname === item.href
+                        ? 'bg-gray-100 text-gray-900'
+                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                     )}
-                  </div>
+                  >
+                    {item.name}
+                  </Link>
                 ))}
                 
                 {/* Mobile Login/Logout Button */}
