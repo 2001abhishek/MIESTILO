@@ -1,16 +1,43 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useState, useRef, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 
 const Navbar = () => {
   const pathname = usePathname();
+  const router = useRouter();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCompanyDropdownOpen, setIsCompanyDropdownOpen] = useState(false);
   const [isMobileCompanyDropdownOpen, setIsMobileCompanyDropdownOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Check authentication status
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const response = await fetch('/api/auth/check');
+        const data = await response.json();
+        setIsAuthenticated(data.isAuthenticated);
+      } catch (error) {
+        setIsAuthenticated(false);
+      }
+    };
+    checkAuth();
+  }, [pathname]);
+
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      setIsAuthenticated(false);
+      router.push('/pages/home');
+      router.refresh();
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
 
   const navItems = [
     { name: 'Home', href: '/pages/home' },
@@ -27,7 +54,6 @@ const Navbar = () => {
     { name: 'Why Us', href: '/pages/why-us' },
     { name: 'Our Customers', href: '/pages/our-customers' },
     { name: 'CSR', href: '/pages/csr' },
-    { name: 'Team', href: '/pages/team' },
     { name: 'Blog', href: '/pages/blog' },
   ];
 
@@ -140,6 +166,28 @@ const Navbar = () => {
                           )}
                         </div>
                       ))}
+                      
+                      {/* Login/Logout Button */}
+                      {isAuthenticated ? (
+                        <button
+                          onClick={handleLogout}
+                          className="px-4 py-2 text-sm font-medium transition-colors duration-200 rounded-full text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                        >
+                          Logout
+                        </button>
+                      ) : (
+                        <Link
+                          href="/pages/auth/login"
+                          className={cn(
+                            'px-4 py-2 text-sm font-medium transition-colors duration-200 rounded-full',
+                            pathname === '/pages/auth/login'
+                              ? 'bg-gray-100 text-gray-900'
+                              : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                          )}
+                        >
+                          Login
+                        </Link>
+                      )}
                     </div>
                   </div>
 
@@ -291,6 +339,32 @@ const Navbar = () => {
                     )}
                   </div>
                 ))}
+                
+                {/* Mobile Login/Logout Button */}
+                {isAuthenticated ? (
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      closeMobileMenu();
+                    }}
+                    className="block w-full text-left px-4 py-3 text-base font-medium rounded-lg transition-colors duration-200 text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                  >
+                    Logout
+                  </button>
+                ) : (
+                  <Link
+                    href="/pages/auth/login"
+                    onClick={closeMobileMenu}
+                    className={cn(
+                      'block px-4 py-3 text-base font-medium rounded-lg transition-colors duration-200',
+                      pathname === '/pages/auth/login'
+                        ? 'bg-gray-100 text-gray-900'
+                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                    )}
+                  >
+                    Login
+                  </Link>
+                )}
               </div>
               
               <div className="mt-6 px-4">
