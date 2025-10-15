@@ -1,9 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useScrollAnimation } from '@/app/hooks/useScrollAnimation';
 
 const ProductGallery = () => {
   const [hoveredSection, setHoveredSection] = useState<number | null>(null);
+  const { createRef } = useScrollAnimation();
 
   const products = [
     {
@@ -37,7 +39,7 @@ const ProductGallery = () => {
   return (
     <div className="w-full py-16 lg:py-24 bg-gray-50">
       {/* Header */}
-      <div className="text-center mb-16 px-4 sm:px-6 lg:px-8">
+      <div ref={createRef()} className="text-center mb-16 px-4 sm:px-6 lg:px-8 animate-on-scroll scroll-fade-down">
         <h2 className="text-4xl lg:text-5xl font-light text-gray-900 mb-4">
           Our Products
         </h2>
@@ -47,7 +49,7 @@ const ProductGallery = () => {
       </div>
 
       {/* Gallery Container */}
-      <div className="relative h-[600px] lg:h-[700px] overflow-hidden">
+      <div ref={createRef()} className="relative h-[600px] lg:h-[700px] overflow-hidden animate-on-scroll scroll-fade-up">
         {/* Background Image */}
         <div 
           className="absolute inset-0 transition-all duration-700 ease-in-out"

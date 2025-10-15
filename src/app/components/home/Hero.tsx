@@ -1,12 +1,17 @@
+'use client';
+
 import React from 'react';
+import { useScrollAnimation } from '@/app/hooks/useScrollAnimation';
 
 const Hero = () => {
+  const { createRef } = useScrollAnimation();
+
   return (
     <div className="w-full bg-white py-20 lg:py-32 relative">
       <div className="max-w-7xl mx-auto px-8 lg:px-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-start">
           {/* Left Content - Building Image */}
-          <div className="relative order-2 lg:order-1">
+          <div ref={createRef()} className="relative order-2 lg:order-1 animate-on-scroll scroll-fade-left">
             {/* Building Image Placeholder */}
             <div className="relative bg-gray-200 overflow-hidden aspect-[4/3]">
               <img 
@@ -29,7 +34,7 @@ const Hero = () => {
           </div>
 
           {/* Right Content - Text */}
-          <div className="space-y-8 order-1 lg:order-2 relative">
+          <div ref={createRef()} className="space-y-8 order-1 lg:order-2 relative animate-on-scroll scroll-fade-right">
             {/* About Us Badge */}
             <div className="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-full text-sm text-gray-600">
               About Us
@@ -64,7 +69,7 @@ const Hero = () => {
       </div>
       
       {/* Explore Now Badge - Positioned absolutely in top right */}
-      <div className="absolute top-12 right-8 lg:right-24">
+      <div ref={createRef()} className="absolute top-12 right-8 lg:right-24 animate-on-scroll scroll-pop">
         <div className="bg-white border-2 border-gray-300 w-28 h-28 lg:w-32 lg:h-32 flex items-center justify-center shadow-sm" 
              style={{borderRadius: '40% 60% 70% 30% / 40% 50% 60% 50%'}}>
           <div className="text-center">

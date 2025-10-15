@@ -1,6 +1,10 @@
+'use client';
+
 import React from 'react';
+import { useScrollAnimation } from '@/app/hooks/useScrollAnimation';
 
 const WhyMiestilo = () => {
+  const { createRef } = useScrollAnimation();
   const features = [
     {
       id: '01',
@@ -76,7 +80,7 @@ const WhyMiestilo = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header Section */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-16">
-          <div className="lg:flex-1">
+          <div ref={createRef()} className="lg:flex-1 animate-on-scroll scroll-fade-left">
             {/* Badge */}
             <div className="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-full text-sm text-gray-600 mb-6">
               Why Choose Us
@@ -91,7 +95,7 @@ const WhyMiestilo = () => {
           </div>
 
           {/* Explore More Button */}
-          <div className="mt-8 lg:mt-0 lg:ml-8">
+          <div ref={createRef()} className="mt-8 lg:mt-0 lg:ml-8 animate-on-scroll scroll-fade-right">
             <button className="inline-flex items-center text-gray-900 font-medium hover:text-orange-500 transition-colors duration-300">
               Explore More
               <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -102,7 +106,7 @@ const WhyMiestilo = () => {
         </div>
 
         {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
+        <div ref={createRef()} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12 animate-on-scroll scroll-pop">
           {features.map((feature, index) => (
             <div 
               key={feature.id} 

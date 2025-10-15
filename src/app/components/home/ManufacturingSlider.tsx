@@ -1,8 +1,10 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useScrollAnimation } from '@/app/hooks/useScrollAnimation';
 
 const ManufacturingSlider = () => {
+  const { createRef } = useScrollAnimation();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
@@ -58,12 +60,12 @@ const ManufacturingSlider = () => {
       {/* Header */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
         <div className="text-center">
-          <h2 className="text-4xl lg:text-5xl xl:text-6xl font-light mb-6 leading-tight">
+          <h2 ref={createRef()} className="text-4xl lg:text-5xl xl:text-6xl font-light mb-6 leading-tight animate-on-scroll scroll-fade-left">
             Explore our state-of-the-art manufacturing 
             <br />
             <span className="text-orange-400">infrastructure & production environments.</span>
           </h2>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+          <p ref={createRef()} className="text-xl text-gray-300 max-w-3xl mx-auto animate-on-scroll scroll-fade-right">
             Take a virtual tour through our world-class facilities where innovation meets precision manufacturing.
           </p>
         </div>
@@ -71,7 +73,8 @@ const ManufacturingSlider = () => {
 
       {/* Slider Container */}
       <div 
-        className="relative h-[500px] lg:h-[600px]"
+        ref={createRef()}
+        className="relative h-[500px] lg:h-[600px] animate-on-scroll scroll-pop"
         onMouseEnter={() => setIsAutoPlaying(false)}
         onMouseLeave={() => setIsAutoPlaying(true)}
       >
@@ -175,14 +178,14 @@ const ManufacturingSlider = () => {
       {/* Slide Counter */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
         <div className="flex items-center justify-between">
-          <div className="text-sm text-gray-400">
+          <div ref={createRef()} className="text-sm text-gray-400 animate-on-scroll scroll-fade-left">
             <span className="text-2xl font-light text-white">{String(currentSlide + 1).padStart(2, '0')}</span>
             <span className="mx-2">/</span>
             <span>{String(slides.length).padStart(2, '0')}</span>
           </div>
 
           {/* Thumbnail Navigation */}
-          <div className="hidden lg:flex space-x-4">
+          <div ref={createRef()} className="hidden lg:flex space-x-4 animate-on-scroll scroll-fade-up">
             {slides.map((slide, index) => (
               <button
                 key={slide.id}
@@ -204,8 +207,9 @@ const ManufacturingSlider = () => {
 
           {/* Auto-play Toggle */}
           <button
+            ref={createRef()}
             onClick={() => setIsAutoPlaying(!isAutoPlaying)}
-            className="flex items-center space-x-2 text-sm text-gray-400 hover:text-white transition-colors duration-300"
+            className="flex items-center space-x-2 text-sm text-gray-400 hover:text-white transition-colors duration-300 animate-on-scroll scroll-fade-right"
           >
             <div className={`w-2 h-2 rounded-full ${isAutoPlaying ? 'bg-green-400' : 'bg-gray-400'}`} />
             <span>{isAutoPlaying ? 'Auto' : 'Manual'}</span>
