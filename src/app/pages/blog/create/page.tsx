@@ -2,9 +2,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useEditor, EditorContent } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
-import './tiptap.css';
+import dynamic from 'next/dynamic';
+import '@/app/components/editor/editor.css';
+
+const AdvancedEditor = dynamic(() => import('@/app/components/editor/AdvancedEditor'), {
+  ssr: false,
+  loading: () => <div className="border border-gray-300 rounded-lg p-4 bg-gray-50">Loading editor...</div>
+});
 
 const CreateBlogPage = () => {
   const router = useRouter();
@@ -18,6 +22,7 @@ const CreateBlogPage = () => {
 
   const [, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>('');
+  const [content, setContent] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isChecking, setIsChecking] = useState(true);
@@ -28,14 +33,10 @@ const CreateBlogPage = () => {
       try {
         const response = await fetch('/api/auth/check');
         const data = await response.json();
-        
-        if (!data.isAuthenticated) {
-          router.push('/pages/auth/login');
-        } else {
-          setIsAuthenticated(true);
-        }
+        setIsAuthenticated(data.isAuthenticated);
       } catch (error) {
-        router.push('/pages/auth/login');
+        console.error('Auth check failed:', error);
+        setIsAuthenticated(false);
       } finally {
         setIsChecking(false);
       }
@@ -43,18 +44,6 @@ const CreateBlogPage = () => {
     
     checkAuth();
   }, [router]);
-
-  // Initialize Tiptap editor
-  const editor = useEditor({
-    extensions: [StarterKit],
-    content: '<p></p>',
-    immediatelyRender: false,
-    editorProps: {
-      attributes: {
-        class: 'focus:outline-none',
-      },
-    },
-  });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -81,8 +70,6 @@ const CreateBlogPage = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    const content = editor?.getHTML() || '';
-    
     // Create excerpt from content (first 150 characters of text)
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = content;
@@ -265,90 +252,11 @@ const CreateBlogPage = () => {
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Content *
             </label>
-            
-            {/* Tiptap Toolbar */}
-            {editor && (
-              <div className="border border-gray-300 rounded-t-lg bg-gray-50 p-2 flex flex-wrap gap-1">
-                <button
-                  type="button"
-                  onClick={() => editor.chain().focus().toggleBold().run()}
-                  className={`px-3 py-1 rounded ${editor.isActive('bold') ? 'bg-gray-900 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'}`}
-                >
-                  <strong>B</strong>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => editor.chain().focus().toggleItalic().run()}
-                  className={`px-3 py-1 rounded ${editor.isActive('italic') ? 'bg-gray-900 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'}`}
-                >
-                  <em>I</em>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => editor.chain().focus().toggleStrike().run()}
-                  className={`px-3 py-1 rounded ${editor.isActive('strike') ? 'bg-gray-900 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'}`}
-                >
-                  <s>S</s>
-                </button>
-                <div className="w-px bg-gray-300 mx-1"></div>
-                <button
-                  type="button"
-                  onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-                  className={`px-3 py-1 rounded ${editor.isActive('heading', { level: 1 }) ? 'bg-gray-900 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'}`}
-                >
-                  H1
-                </button>
-                <button
-                  type="button"
-                  onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-                  className={`px-3 py-1 rounded ${editor.isActive('heading', { level: 2 }) ? 'bg-gray-900 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'}`}
-                >
-                  H2
-                </button>
-                <button
-                  type="button"
-                  onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-                  className={`px-3 py-1 rounded ${editor.isActive('heading', { level: 3 }) ? 'bg-gray-900 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'}`}
-                >
-                  H3
-                </button>
-                <div className="w-px bg-gray-300 mx-1"></div>
-                <button
-                  type="button"
-                  onClick={() => editor.chain().focus().toggleBulletList().run()}
-                  className={`px-3 py-1 rounded ${editor.isActive('bulletList') ? 'bg-gray-900 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'}`}
-                >
-                  • List
-                </button>
-                <button
-                  type="button"
-                  onClick={() => editor.chain().focus().toggleOrderedList().run()}
-                  className={`px-3 py-1 rounded ${editor.isActive('orderedList') ? 'bg-gray-900 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'}`}
-                >
-                  1. List
-                </button>
-                <div className="w-px bg-gray-300 mx-1"></div>
-                <button
-                  type="button"
-                  onClick={() => editor.chain().focus().toggleBlockquote().run()}
-                  className={`px-3 py-1 rounded ${editor.isActive('blockquote') ? 'bg-gray-900 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'}`}
-                >
-                  Quote
-                </button>
-                <button
-                  type="button"
-                  onClick={() => editor.chain().focus().setHorizontalRule().run()}
-                  className="px-3 py-1 rounded bg-white text-gray-700 hover:bg-gray-100"
-                >
-                  HR
-                </button>
-              </div>
-            )}
-            
-            {/* Tiptap Editor */}
-            <div className="border border-gray-300 rounded-b-lg bg-white">
-              <EditorContent editor={editor} />
-            </div>
+            <AdvancedEditor
+              content={content}
+              onChange={setContent}
+              placeholder="Start writing your blog post..."
+            />
           </div>
 
           {/* Action Buttons */}

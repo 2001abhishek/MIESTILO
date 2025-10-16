@@ -1,0 +1,256 @@
+/* Advanced Editor Styles */
+.ProseMirror {
+  outline: none;
+  padding: 1rem;
+  min-height: 400px;
+}
+
+.ProseMirror p.is-editor-empty:first-child::before {
+  color: #adb5bd;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+/* Code blocks */
+.ProseMirror pre {
+  background: #0d1117;
+  color: #c9d1d9;
+  font-family: 'JetBrains Mono', 'Menlo', 'Monaco', 'Courier New', monospace;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.ProseMirror pre code {
+  color: inherit;
+  padding: 0;
+  background: none;
+  font-size: 0.8rem;
+}
+
+/* Inline code */
+.ProseMirror code {
+  background-color: #f1f5f9;
+  color: #e11d48;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-size: 0.875em;
+}
+
+/* Blockquotes */
+.ProseMirror blockquote {
+  padding-left: 1rem;
+  border-left: 4px solid #e5e7eb;
+  margin: 1.5rem 0;
+  font-style: italic;
+  color: #6b7280;
+}
+
+/* Tables */
+.ProseMirror table {
+  border-collapse: collapse;
+  table-layout: fixed;
+  width: 100%;
+  margin: 1rem 0;
+  overflow: hidden;
+}
+
+.ProseMirror td,
+.ProseMirror th {
+  min-width: 1em;
+  border: 2px solid #ced4da;
+  padding: 3px 5px;
+  vertical-align: top;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.ProseMirror th {
+  font-weight: bold;
+  text-align: left;
+  background-color: #f8f9fa;
+}
+
+.ProseMirror .selectedCell:after {
+  z-index: 2;
+  position: absolute;
+  content: "";
+  left: 0; right: 0; top: 0; bottom: 0;
+  background: rgba(200, 200, 255, 0.4);
+  pointer-events: none;
+}
+
+.ProseMirror .column-resize-handle {
+  position: absolute;
+  right: -2px;
+  top: 0;
+  bottom: -2px;
+  width: 4px;
+  background-color: #adf;
+  pointer-events: none;
+}
+
+.ProseMirror table .tableWrapper {
+  padding: 1rem 0;
+  overflow-x: auto;
+}
+
+.ProseMirror .resize-cursor {
+  cursor: ew-resize;
+  cursor: col-resize;
+}
+
+/* Images */
+.ProseMirror img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+}
+
+.ProseMirror img.ProseMirror-selectednode {
+  outline: 3px solid #68cef8;
+}
+
+/* Links */
+.ProseMirror a {
+  color: #3b82f6;
+  text-decoration: underline;
+}
+
+.ProseMirror a:hover {
+  color: #1d4ed8;
+}
+
+/* Lists */
+.ProseMirror ul,
+.ProseMirror ol {
+  padding-left: 1.5rem;
+  margin: 1rem 0;
+}
+
+.ProseMirror li {
+  margin: 0.25rem 0;
+}
+
+.ProseMirror li p {
+  margin: 0;
+}
+
+/* Headings */
+.ProseMirror h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 2rem 0 1rem 0;
+  line-height: 1.2;
+}
+
+.ProseMirror h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 1.5rem 0 0.75rem 0;
+  line-height: 1.3;
+}
+
+.ProseMirror h3 {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin: 1.25rem 0 0.5rem 0;
+  line-height: 1.4;
+}
+
+.ProseMirror h4 {
+  font-size: 1.125rem;
+  font-weight: bold;
+  margin: 1rem 0 0.5rem 0;
+  line-height: 1.4;
+}
+
+.ProseMirror h5 {
+  font-size: 1rem;
+  font-weight: bold;
+  margin: 1rem 0 0.5rem 0;
+  line-height: 1.5;
+}
+
+.ProseMirror h6 {
+  font-size: 0.875rem;
+  font-weight: bold;
+  margin: 1rem 0 0.5rem 0;
+  line-height: 1.5;
+}
+
+/* Horizontal rule */
+.ProseMirror hr {
+  border: none;
+  border-top: 2px solid #e5e7eb;
+  margin: 2rem 0;
+}
+
+/* Highlight */
+.ProseMirror mark {
+  background-color: #fef08a;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+}
+
+/* Focus styles */
+.ProseMirror:focus {
+  outline: none;
+}
+
+/* Placeholder */
+.ProseMirror .is-empty::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #9ca3af;
+  pointer-events: none;
+  height: 0;
+}
+
+/* Selection */
+.ProseMirror-selectednode {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Drag handle */
+.ProseMirror .drag-handle {
+  position: absolute;
+  opacity: 0;
+  transition: opacity 0.2s;
+  left: -1.5rem;
+  top: 0;
+  cursor: grab;
+}
+
+.ProseMirror .drag-handle:hover {
+  opacity: 1;
+}
+
+.ProseMirror .drag-handle.drag-handle--active {
+  opacity: 1;
+  cursor: grabbing;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .ProseMirror {
+    padding: 0.75rem;
+  }
+  
+  .ProseMirror h1 {
+    font-size: 1.75rem;
+  }
+  
+  .ProseMirror h2 {
+    font-size: 1.375rem;
+  }
+  
+  .ProseMirror h3 {
+    font-size: 1.125rem;
+  }
+}
