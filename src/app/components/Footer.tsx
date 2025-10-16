@@ -150,13 +150,8 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/pages/careers" className="text-sm text-gray-300 hover:text-orange-400 transition-colors">
-                  Careers
-                </Link>
-              </li>
-              <li>
-                <Link href="/pages/privacy" className="text-sm text-gray-300 hover:text-orange-400 transition-colors">
-                  Privacy Policy
+                <Link target="_blank" href="https://www.linkedin.com/in/abhishek-ray-6ab2581a9/" className="text-sm text-gray-300 hover:text-orange-400 transition-colors ">
+                  Credit
                 </Link>
               </li>
             </ul>
@@ -170,7 +165,7 @@ const Footer = () => {
               Copyright 2024 Miestilo Group all rights reserved.
             </div>
             <div className="text-sm text-gray-400">
-              Powered By Techno Bytes IT Solutions LLP
+              Powered By MikroMedia Digital Marketing Agency
             </div>
           </div>
         </div>
