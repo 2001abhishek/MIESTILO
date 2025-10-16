@@ -1,8 +1,10 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useScrollAnimation } from '@/app/hooks/useScrollAnimation';
 
 const Hero = () => {
+  const { createRef } = useScrollAnimation();
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const slides = [
@@ -38,7 +40,7 @@ const Hero = () => {
   return (
     <div className="relative w-full h-screen overflow-hidden">
       {/* Background Images */}
-      {slides.map((slide, index) => (
+  {slides.map((slide, index) => (
         <div
           key={slide.id}
           className={`absolute inset-0 transition-opacity duration-1000 ${
@@ -58,16 +60,19 @@ const Hero = () => {
       ))}
 
       {/* Content Overlay */}
-      <div className="relative z-10 h-full flex items-end pb-32">
+      <div 
+        ref={createRef()}
+        className="relative z-10 h-full flex items-end pb-32 animate-on-scroll scroll-fade-down"
+      >
         <div className="px-8 lg:px-16 max-w-7xl mx-auto w-full">
           <div className="text-left text-white max-w-2xl">
             {/* Subtitle - Small text above */}
-            <p className="text-sm md:text-base text-gray-300 mb-3 transition-all duration-500 tracking-wide">
+            <p className="text-sm md:text-base text-gray-300 mb-3 transition-all duration-500 tracking-wide animate-fade-in-down animation-delay-200">
               {slides[currentSlide].subtitle}
             </p>
             
             {/* Current Slide Title - Large Bold */}
-            <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 transition-all duration-500 leading-tight">
+            <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 transition-all duration-500 leading-tight animate-fade-in-down animation-delay-400">
               {slides[currentSlide].title}
             </h2>
           </div>
@@ -75,8 +80,11 @@ const Hero = () => {
       </div>
 
       {/* Status Bar - Slide Indicators */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20">
-        <div className="flex space-x-4">
+      <div 
+        ref={createRef()}
+        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 animate-on-scroll scroll-fade-up"
+      >
+        <div className="flex space-x-4 animate-fade-in-up animation-delay-600">
           {slides.map((_, index) => (
             <button
               key={index}
@@ -104,8 +112,9 @@ const Hero = () => {
 
       {/* Navigation Arrows */}
       <button
+        ref={createRef()}
         onClick={() => setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length)}
-        className="absolute left-6 top-1/2 transform -translate-y-1/2 z-20 w-12 h-12 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-all duration-300"
+        className="absolute left-6 top-1/2 transform -translate-y-1/2 z-20 w-12 h-12 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-all duration-300 animate-on-scroll scroll-fade-left animate-fade-in-left animation-delay-800"
       >
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -113,8 +122,9 @@ const Hero = () => {
       </button>
 
       <button
+        ref={createRef()}
         onClick={() => setCurrentSlide((prev) => (prev + 1) % slides.length)}
-        className="absolute right-6 top-1/2 transform -translate-y-1/2 z-20 w-12 h-12 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-all duration-300"
+        className="absolute right-6 top-1/2 transform -translate-y-1/2 z-20 w-12 h-12 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-all duration-300 animate-on-scroll scroll-fade-right animate-fade-in-right animation-delay-800"
       >
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
