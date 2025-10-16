@@ -1,13 +1,31 @@
-import React from 'react';
+'use client';
+
+import React, { useState, useEffect } from 'react';
 import Hero from '../../components/home/Hero';
 import ProductGallery from '../../components/home/ProductGallery';
 import WhyMiestilo from '../../components/home/WhyMiestilo';
 import ManufacturingSlider from '../../components/home/ManufacturingSlider';
+import { FullScreenLoader } from '@/app/components/ui/Loader';
 
 const HomePage = () => {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Simple 2-second loading time
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) {
+    return <FullScreenLoader size="xl" />;
+  }
+
   return (
     <div className="min-h-screen bg-white">
-      <Hero />
+        <Hero />
       
       {/* Product Gallery Section */}
       <ProductGallery />

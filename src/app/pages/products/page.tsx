@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { FullScreenLoader } from '@/app/components/ui/Loader';
 import ProductCard from '@/app/components/products/ProductCard';
 
 interface Product {
@@ -46,11 +47,7 @@ const Products = () => {
   }, []);
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-xl text-gray-600">Loading products...</div>
-      </div>
-    );
+    return <FullScreenLoader size="lg" />;
   }
 
   return (

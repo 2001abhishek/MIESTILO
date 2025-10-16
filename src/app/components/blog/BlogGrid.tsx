@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import Loader from '@/app/components/ui/Loader';
 
 interface BlogPost {
   id: number;
@@ -40,7 +41,9 @@ const BlogGrid = () => {
     return (
       <div className="py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center text-gray-600">Loading blogs...</div>
+          <div className="flex justify-center">
+            <Loader size="lg" />
+          </div>
         </div>
       </div>
     );
