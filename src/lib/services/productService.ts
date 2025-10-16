@@ -81,7 +81,10 @@ export class ProductService {
           { returnDocument: 'after' }
         );
 
-      return result.value;
+      if (!result) {
+        throw new Error('Product not found');
+      }
+      return result;
     } catch (error) {
       console.error('Error updating product:', error);
       throw new Error('Failed to update product');

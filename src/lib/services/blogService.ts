@@ -81,7 +81,10 @@ export class BlogService {
           { returnDocument: 'after' }
         );
 
-      return result.value;
+      if (!result) {
+        throw new Error('Blog not found');
+      }
+      return result;
     } catch (error) {
       console.error('Error updating blog:', error);
       throw new Error('Failed to update blog');
