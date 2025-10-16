@@ -286,3 +286,22 @@
 .scroll-pop.visible {
   transform: scale(1);
 }
+
+/* Sticky Download Component Animations */
+@keyframes rotateText {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-rotate-text {
+  animation: rotateText 10s linear infinite;
+}
+
+.animate-rotate-text-slow {
+  animation: rotateText 20s linear infinite;
+}
+
