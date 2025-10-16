@@ -4,6 +4,8 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
+import Loader from '@/app/components/ui/Loader';
+import VisitingCardModal from '@/app/components/ui/VisitingCardModal';
 import '@/app/components/editor/editor.css';
 
 interface Product {
@@ -19,7 +21,16 @@ const ProductDetailPage = () => {
   
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isVisitingCardOpen, setIsVisitingCardOpen] = useState(false);
   const [error, setError] = useState(false);
+
+  const openVisitingCard = () => {
+    setIsVisitingCardOpen(true);
+  };
+
+  const closeVisitingCard = () => {
+    setIsVisitingCardOpen(false);
+  };
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -107,12 +118,12 @@ const ProductDetailPage = () => {
             Get in touch with us to learn more about pricing, customization options, and bulk orders.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
-            <Link
-              href="/contact"
+            <button
+              onClick={openVisitingCard}
               className="inline-flex items-center justify-center px-6 py-3 bg-black text-white font-medium rounded-lg hover:bg-gray-800 transition-colors"
             >
               Contact Us
-            </Link>
+            </button>
             <Link
               href="/pages/products"
               className="inline-flex items-center justify-center px-6 py-3 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"
@@ -145,6 +156,12 @@ const ProductDetailPage = () => {
           </Link>
         </div>
       </article>
+
+      {/* Visiting Card Modal */}
+      <VisitingCardModal 
+        isOpen={isVisitingCardOpen} 
+        onClose={closeVisitingCard} 
+      />
     </div>
   );
 };

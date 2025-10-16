@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState, useRef, useEffect } from 'react';
 import { cn } from '@/lib/utils';
+import VisitingCardModal from './ui/VisitingCardModal';
 
 const Navbar = () => {
   const pathname = usePathname();
@@ -15,6 +16,7 @@ const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [isVisitingCardOpen, setIsVisitingCardOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Handle scroll behavior
@@ -102,6 +104,14 @@ const Navbar = () => {
     setIsMobileMenuOpen(false);
   };
 
+  const openVisitingCard = () => {
+    setIsVisitingCardOpen(true);
+  };
+
+  const closeVisitingCard = () => {
+    setIsVisitingCardOpen(false);
+  };
+
   return (
     <>
       <div className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 py-2 sm:py-4 ${
@@ -179,8 +189,8 @@ const Navbar = () => {
 
                   {/* Get in Touch Button */}
                   <div className="flex-shrink-0">
-                    <Link
-                      href="/contact"
+                    <button
+                      onClick={openVisitingCard}
                       className="inline-flex items-center px-6 py-2 bg-black text-white text-sm font-medium rounded-full hover:bg-gray-800 transition-colors duration-200"
                     >
                       Get in Touch
@@ -198,7 +208,7 @@ const Navbar = () => {
                           d="M17 8l4 4m0 0l-4 4m4-4H3"
                         />
                       </svg>
-                    </Link>
+                    </button>
                   </div>
                 </div>
               </nav>
@@ -206,12 +216,12 @@ const Navbar = () => {
 
             {/* Mobile Menu Button */}
             <div className="flex items-center gap-4 lg:hidden ml-auto">
-              <Link
-                href="/contact"
+              <button
+                onClick={openVisitingCard}
                 className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors duration-200"
               >
                 Contact
-              </Link>
+              </button>
               <button
                 onClick={toggleMobileMenu}
                 className={`p-2 rounded-md transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-gray-500 ${
@@ -346,9 +356,11 @@ const Navbar = () => {
           
           {/* Footer */}
           <div className="p-6 border-t border-gray-200 bg-gray-50">
-            <Link
-              href="/contact"
-              onClick={closeMobileMenu}
+            <button
+              onClick={() => {
+                openVisitingCard();
+                closeMobileMenu();
+              }}
               className="group flex items-center justify-center w-full px-6 py-4 bg-gradient-to-r from-black to-gray-800 text-white text-base font-medium rounded-xl hover:from-gray-800 hover:to-black transition-all duration-300 transform hover:scale-105 hover:shadow-xl animate-pop-in animation-delay-800"
             >
               <svg className="w-5 h-5 mr-3 transition-transform duration-300 group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -358,10 +370,16 @@ const Navbar = () => {
               <svg className="w-4 h-4 ml-2 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
-            </Link>
+            </button>
           </div>
         </div>
       </div>
+
+      {/* Visiting Card Modal */}
+      <VisitingCardModal 
+        isOpen={isVisitingCardOpen} 
+        onClose={closeVisitingCard} 
+      />
     </>
   );
 };

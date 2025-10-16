@@ -1,9 +1,20 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
+import VisitingCardModal from './ui/VisitingCardModal';
 
 const Footer = () => {
+  const [isVisitingCardOpen, setIsVisitingCardOpen] = useState(false);
+
+  const openVisitingCard = () => {
+    setIsVisitingCardOpen(true);
+  };
+
+  const closeVisitingCard = () => {
+    setIsVisitingCardOpen(false);
+  };
+
   return (
     <footer className="bg-black text-white py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -86,9 +97,12 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/pages/contact" className="text-sm text-gray-300 hover:text-orange-400 transition-colors">
+                <button 
+                  onClick={openVisitingCard}
+                  className="text-sm text-gray-300 hover:text-orange-400 transition-colors"
+                >
                   Contact Us
-                </Link>
+                </button>
               </li>
             </ul>
 
@@ -170,6 +184,12 @@ const Footer = () => {
           </div>
         </div>
       </div>
+
+      {/* Visiting Card Modal */}
+      <VisitingCardModal 
+        isOpen={isVisitingCardOpen} 
+        onClose={closeVisitingCard} 
+      />
     </footer>
   );
 };
