@@ -104,12 +104,6 @@ const LoginPage = () => {
               {isLoading ? 'Signing in...' : 'Sign in'}
             </button>
           </div>
-
-          <div className="text-center text-sm text-gray-600">
-            <p>Demo Credentials:</p>
-            <p className="font-mono mt-1">Username: admin</p>
-            <p className="font-mono">Password: admin123</p>
-          </div>
         </form>
       </div>
     </div>
