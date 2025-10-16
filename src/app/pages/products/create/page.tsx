@@ -3,16 +3,23 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
+import '@/app/components/editor/editor.css';
+
+const AdvancedEditor = dynamic(() => import('@/app/components/editor/AdvancedEditor'), {
+  ssr: false,
+  loading: () => <div className="border border-gray-300 rounded-lg p-4 bg-gray-50">Loading editor...</div>
+});
 
 const CreateProductPage = () => {
   const router = useRouter();
   const [formData, setFormData] = useState({
     name: '',
-    details: '',
   });
 
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>('');
+  const [details, setDetails] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isChecking, setIsChecking] = useState(true);
@@ -39,7 +46,7 @@ const CreateProductPage = () => {
     checkAuth();
   }, [router]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -75,6 +82,7 @@ const CreateProductPage = () => {
       // Create product with base64 image
       const productData = {
         ...formData,
+        details, // Use rich text content
         image: imagePreview, // Use base64 data URL directly
       };
 
@@ -194,22 +202,14 @@ const CreateProductPage = () => {
 
             {/* Product Details */}
             <div>
-              <label htmlFor="details" className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 Product Details *
               </label>
-              <textarea
-                id="details"
-                name="details"
-                required
-                rows={10}
-                value={formData.details}
-                onChange={handleInputChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent resize-none"
-                placeholder="Quality & Comfort&#10;- Skin-friendly fabrics for lingerie&#10;- Bedsheets with luxurious feel&#10;&#10;Design & Aesthetics&#10;- Printed designs including 3D printed bedsheets&#10;&#10;Customization & Flexibility&#10;- Custom designs available"
+              <AdvancedEditor
+                content={details}
+                onChange={setDetails}
+                placeholder="Describe your product features, quality, design, and customization options..."
               />
-              <p className="mt-1 text-sm text-gray-500">
-                Use line breaks to organize the details into sections
-              </p>
             </div>
           </div>
 

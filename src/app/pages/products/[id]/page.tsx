@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
+import '@/app/components/editor/editor.css';
 
 interface Product {
   id: number;
@@ -93,9 +94,10 @@ const ProductDetailPage = () => {
       {/* Content Section */}
       <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="prose prose-lg max-w-none">
-          <div className="text-gray-700 leading-relaxed whitespace-pre-line text-lg">
-            {product.details}
-          </div>
+          <div 
+            className="text-gray-700 leading-relaxed text-lg"
+            dangerouslySetInnerHTML={{ __html: product.details }}
+          />
         </div>
 
         {/* Contact Section */}
