@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import fs from 'fs';
-import path from 'path';
+import { ProductService } from '@/lib/services/productService';
 
 export async function POST(request: Request) {
   try {
@@ -18,32 +17,25 @@ export async function POST(request: Request) {
 
     const productData = await request.json();
     
-    // Read existing products
-    const filePath = path.join(process.cwd(), 'src', 'app', 'data', 'products.json');
-    const fileContents = fs.readFileSync(filePath, 'utf8');
-    const products = JSON.parse(fileContents);
+    // Validate required fields
+    if (!productData.name || !productData.image || !productData.details) {
+      return NextResponse.json(
+        { success: false, message: 'Missing required fields: name, image, details' },
+        { status: 400 }
+      );
+    }
     
-    // Generate new ID
-    const newId = products.length > 0 ? Math.max(...products.map((p: { id: number }) => p.id)) + 1 : 1;
-    
-    // Create new product
-    const newProduct = {
-      id: newId,
+    // Create new product using MongoDB service
+    const newProduct = await ProductService.createProduct({
       name: productData.name,
       image: productData.image,
       details: productData.details
-    };
-    
-    // Add to beginning of array (newest first)
-    products.unshift(newProduct);
-    
-    // Write back to file
-    fs.writeFileSync(filePath, JSON.stringify(products, null, 2), 'utf8');
+    });
     
     return NextResponse.json({
       success: true,
-      message: 'Product created successfully!',
-      product: newProduct
+      product: newProduct,
+      message: 'Product created successfully'
     });
   } catch (error) {
     console.error('Error creating product:', error);

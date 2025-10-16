@@ -64,7 +64,7 @@ const CreateProductPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!imageFile) {
+    if (!imagePreview) {
       alert('Please select an image');
       return;
     }
@@ -72,27 +72,10 @@ const CreateProductPage = () => {
     setIsSubmitting(true);
 
     try {
-      // Upload image first
-      const formDataImage = new FormData();
-      formDataImage.append('image', imageFile);
-
-      const uploadResponse = await fetch('/api/upload/product-image', {
-        method: 'POST',
-        body: formDataImage,
-      });
-
-      const uploadData = await uploadResponse.json();
-
-      if (!uploadData.success) {
-        alert('Failed to upload image: ' + uploadData.message);
-        setIsSubmitting(false);
-        return;
-      }
-
-      // Create product with uploaded image path
+      // Create product with base64 image
       const productData = {
         ...formData,
-        image: uploadData.imagePath,
+        image: imagePreview, // Use base64 data URL directly
       };
 
       const response = await fetch('/api/products/create', {

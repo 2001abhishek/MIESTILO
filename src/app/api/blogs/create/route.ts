@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import fs from 'fs';
-import path from 'path';
+import { BlogService } from '@/lib/services/blogService';
 
 export async function POST(request: Request) {
   try {
@@ -18,32 +17,25 @@ export async function POST(request: Request) {
 
     const blogData = await request.json();
     
-    // Read existing blogs
-    const filePath = path.join(process.cwd(), 'src', 'app', 'data', 'blogs.json');
-    const fileContents = fs.readFileSync(filePath, 'utf8');
-    const blogs = JSON.parse(fileContents);
+    // Validate required fields
+    if (!blogData.title || !blogData.date || !blogData.category || !blogData.author || !blogData.content) {
+      return NextResponse.json(
+        { success: false, message: 'Missing required fields: title, date, category, author, content' },
+        { status: 400 }
+      );
+    }
     
-    // Generate new ID
-    const newId = blogs.length > 0 ? Math.max(...blogs.map((b: { id: number }) => b.id)) + 1 : 1;
-    
-    // Create new blog post
-    const newBlog = {
-      id: newId,
+    // Create new blog post using MongoDB service
+    const newBlog = await BlogService.createBlog({
       title: blogData.title,
       image: blogData.image || 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80',
       date: blogData.date,
       category: blogData.category,
-      readTime: blogData.readTime,
+      readTime: blogData.readTime || '5 min read',
       author: blogData.author,
       excerpt: blogData.excerpt || blogData.content.substring(0, 150) + '...',
       content: blogData.content
-    };
-    
-    // Add to beginning of array (newest first)
-    blogs.unshift(newBlog);
-    
-    // Write back to file
-    fs.writeFileSync(filePath, JSON.stringify(blogs, null, 2), 'utf8');
+    });
     
     return NextResponse.json({
       success: true,

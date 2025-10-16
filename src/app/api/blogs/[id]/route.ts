@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import blogsData from '@/app/data/blogs.json';
+import { BlogService } from '@/lib/services/blogService';
 
 export async function GET(
   request: Request,
@@ -8,7 +8,15 @@ export async function GET(
   try {
     const { id } = await params;
     const blogId = parseInt(id);
-    const blog = blogsData.find((b) => b.id === blogId);
+    
+    if (isNaN(blogId)) {
+      return NextResponse.json(
+        { success: false, message: 'Invalid blog ID' },
+        { status: 400 }
+      );
+    }
+
+    const blog = await BlogService.getBlogById(blogId);
 
     if (!blog) {
       return NextResponse.json(
@@ -22,6 +30,7 @@ export async function GET(
       blog
     });
   } catch (error) {
+    console.error('Blog by ID API Error:', error);
     return NextResponse.json(
       { success: false, message: 'Failed to fetch blog' },
       { status: 500 }
