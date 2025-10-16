@@ -17,6 +17,10 @@ const Products = () => {
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+  const handleDeleteProduct = (deletedId: number) => {
+    setProducts(prev => prev.filter(product => product.id !== deletedId));
+  };
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -71,7 +75,12 @@ const Products = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {products.map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <ProductCard 
+                key={product.id} 
+                product={product} 
+                isAuthenticated={isAuthenticated}
+                onDelete={handleDeleteProduct}
+              />
             ))}
           </div>
 
